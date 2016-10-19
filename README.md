@@ -1,3 +1,3 @@
-# gulp-uncss
-## 配置gulp，使用uncss去除无用css
+# gulp
+## 配置gulp
 ## 转载请注明出处，作者：ghost
