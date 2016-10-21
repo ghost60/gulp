@@ -2,6 +2,11 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var uncss = require('gulp-uncss');
 var browserSync = require('browser-sync');
+var useref = require('gulp-useref');
+var uglify = require('gulp-uglify');
+var gulpIf = require('gulp-if');
+var minifyCSS = require('gulp-minify-css');
+var imagemin = require('gulp-imagemin');
  
 gulp.task('hello', function() {
   console.log('Hello World!');
@@ -22,23 +27,53 @@ gulp.task('uncss', function () {
         .pipe(uncss({
             html: ['index.html', '**/*.html', 'http://example.com']
         }))
-        .pipe(gulp.dest('dist/css'));
+        .pipe(gulp.dest('app/dist/css'));
 });
 
 // 预处理sass
 gulp.task('sass', function(){
   return gulp.src('app/css/**/*.scss')
     .pipe(sass.sync().on('error', sass.logError))
-    .pipe(gulp.dest('dist/css'))
+    .pipe(gulp.dest('app/dist/css'))
     .pipe(browserSync.reload({
       stream: true
     }))
 });
 
+//合并压缩js css 在html里面加注释不能少
+gulp.task('useref', function(){
+  return gulp.src('app/*.html')
+  		.pipe(gulpIf('*.css', minifyCSS()))
+    	.pipe(gulpIf('*.js', uglify()))
+    	.pipe(useref())
+   	    .pipe(gulp.dest('dist'))
+});
+
+//压缩css
+gulp.task('comcss', function(){
+  return gulp.src('dist/css/*.css')
+  		.pipe(minifyCSS())
+   	    .pipe(gulp.dest('dist'))
+});
+//压缩js
+gulp.task('comjs', function(){
+  return gulp.src('dist/js/*.js')
+  		.pipe(useref())
+   	    .pipe(gulp.dest('dist'))
+});
+
+//压缩图片
+var imagemin = require('gulp-imagemin');
+gulp.task('images', function(){
+  return gulp.src('app/images/**/*.+(png|jpg|gif|svg)')
+  .pipe(imagemin())
+  .pipe(gulp.dest('dist/images'))
+});
+
 //监听文件
 //在watch任务之前告知Gulp，先把browserSync和Sass任务执行了再说
-gulp.task('watch', ['browserSync', 'sass'], function (){
-  gulp.watch('app/scss/**/*.scss', ['sass']);
+gulp.task('watch', ['browserSync', 'sass', 'uncss'], function (){
+  gulp.watch('app/css/**/*.scss', ['sass']);
   // Other watchers
 })
 //现在你执行gulp watch命令，在执行完browserSync和Sass，才会开始监听
