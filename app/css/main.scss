@@ -1,0 +1,31 @@
+$fontSize1: 12px;
+$fontSize2: 13px;
+$fontSize3: 14px;
+$fontSize4: 15px;
+$fontSize5: 20px;
+$color1:#D66464;
+$color2:#A0ECEE;
+$color3:#7B81DD;
+$color4:#95D694;
+$color5:#F6BD6C;
+
+.p1{
+	font-size:$fontSize1;
+	background:$color1;
+}
+.p2{
+	font-size:$fontSize2;
+	background:$color2;
+}
+.p3{
+	font-size:$fontSize3;
+	background:$color3;
+}
+.p4{
+	font-size:$fontSize4;
+	background:$color4;
+}
+.p5{
+	font-size:$fontSize5;
+	background:$color5;
+}
